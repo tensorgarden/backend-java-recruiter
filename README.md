@@ -62,7 +62,7 @@ src/
     types.ts           TypeScript interfaces (Candidate, JobReq, Assessment, etc.)
     demo-data.ts       13 candidates, 3 reqs, 8 assessments, 10 activities
 tests/
-  backend_java_recruiter.test.ts   14 data-integrity tests
+  backend_java_recruiter.test.ts   17 data-integrity tests
 scripts/
   capture-screenshots.mjs          Playwright screenshot capture
 ```
@@ -85,7 +85,7 @@ All four gates are enforced in CI and must pass locally before pushing:
 ```bash
 npm run lint       # ESLint with --max-warnings=0
 npm run typecheck  # tsc --noEmit
-npm test           # vitest run (14 tests)
+npm test           # vitest run (17 tests)
 npm run build      # next build
 ```
 
