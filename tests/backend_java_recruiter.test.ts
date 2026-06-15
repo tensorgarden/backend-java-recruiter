@@ -224,4 +224,46 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
       ).toBeGreaterThan(fourteenDaysAgo);
     }
   });
+
+  // Pain point: uncalibrated seniority matching wastes ~40% more interviews
+  // per hire. "Senior at a startup" does not equal "Senior at enterprise."
+  // Candidates more than one level below a req are a pipeline-quality risk.
+  it("candidates are within one level of their job req's target seniority", () => {
+    const rank: Record<string, number> = {
+      junior: 0, mid: 1, senior: 2, staff: 3, principal: 4,
+    };
+    const reqMap = new Map(demoJobReqs.map((r) => [r.id, r]));
+    for (const c of demoCandidates) {
+      const req = reqMap.get(c.jobReqId);
+      if (!req) continue;
+      // Closed candidates are not in the active pipeline — mismatches
+      // among hired/declined/withdrawn are water under the bridge.
+      if (c.status === "hired" || c.status === "declined" || c.status === "withdrawn") continue;
+      const gap = rank[c.seniority] - rank[req.seniority];
+      expect(
+        gap,
+        `Candidate ${c.id} is ${c.seniority} but req ${c.jobReqId} targets ${req.seniority} (gap: ${gap})`,
+      ).toBeGreaterThanOrEqual(-1);
+    }
+  });
+
+  // Pain point: title inflation — a candidate one level below a req may
+  // still be a strong hire, but only if the gap is acknowledged and the
+  // recruiter has a deliberate rationale in notes.
+  it("candidates one level below their req have notes acknowledging the fit gap", () => {
+    const rank: Record<string, number> = {
+      junior: 0, mid: 1, senior: 2, staff: 3, principal: 4,
+    };
+    const reqMap = new Map(demoJobReqs.map((r) => [r.id, r]));
+    for (const c of demoCandidates) {
+      const req = reqMap.get(c.jobReqId);
+      if (!req) continue;
+      const gap = rank[c.seniority] - rank[req.seniority];
+      if (gap !== -1) continue;
+      expect(
+        c.notes.length,
+        `Candidate ${c.id} is ${c.seniority} for ${req.seniority} req ${c.jobReqId} but notes are empty — gap must be explained`,
+      ).toBeGreaterThan(10);
+    }
+  });
 });
