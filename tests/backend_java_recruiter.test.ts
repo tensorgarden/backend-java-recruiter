@@ -266,4 +266,46 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
       ).toBeGreaterThan(10);
     }
   });
+
+  // Assessment calibration: inconsistent grading erodes hiring-manager trust
+  // and wastes pipeline slots on candidates advanced through scoring errors.
+  // A "pass" at 55% looks like grade inflation; a "fail" at 72% signals a
+  // broken rubric. Calibrated thresholds keep every result defensible.
+  it("assessment scores are calibrated to their result label", () => {
+    for (const a of demoAssessments) {
+      const pct = a.maxScore > 0 ? a.score / a.maxScore : null;
+      if (a.result === "pending") {
+        // Pending assessments should not have been scored yet.
+        expect(
+          a.score,
+          `Assessment ${a.id} is pending but has score ${a.score}/${a.maxScore}`,
+        ).toBe(0);
+        continue;
+      }
+      expect(
+        pct,
+        `Assessment ${a.id} has maxScore ${a.maxScore} — cannot calibrate`,
+      ).not.toBeNull();
+      if (a.result === "pass") {
+        expect(
+          pct!,
+          `Assessment ${a.id} is "pass" but score ${a.score}/${a.maxScore} is only ${Math.round(pct! * 100)}%`,
+        ).toBeGreaterThanOrEqual(0.65);
+      } else if (a.result === "fail") {
+        expect(
+          pct!,
+          `Assessment ${a.id} is "fail" but score ${a.score}/${a.maxScore} is ${Math.round(pct! * 100)}%`,
+        ).toBeLessThan(0.50);
+      } else if (a.result === "marginal") {
+        expect(
+          pct!,
+          `Assessment ${a.id} is "marginal" but score ${a.score}/${a.maxScore} is ${Math.round(pct! * 100)}%`,
+        ).toBeGreaterThanOrEqual(0.50);
+        expect(
+          pct!,
+          `Assessment ${a.id} is "marginal" but score ${a.score}/${a.maxScore} is too high at ${Math.round(pct! * 100)}%`,
+        ).toBeLessThanOrEqual(0.75);
+      }
+    }
+  });
 });
