@@ -69,6 +69,8 @@ export interface Assessment {
   score: number;
   maxScore: number;
   grader: string;
+  humanReviewedAt: string | null;
+  calibrationNotes: string;
   completedAt: string;
   notes: string;
 }

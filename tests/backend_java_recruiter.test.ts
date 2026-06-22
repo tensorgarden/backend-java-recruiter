@@ -308,4 +308,39 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
       }
     }
   });
+
+  // Pain point: AI-assisted screens need a human calibration loop so
+  // recruiters do not advance candidates on unreviewed scores alone.
+  it("completed assessments include human calibration before pipeline use", () => {
+    for (const a of demoAssessments) {
+      if (a.result === "pending") continue;
+      expect(
+        a.humanReviewedAt,
+        `Assessment ${a.id} has result ${a.result} but no human review timestamp`,
+      ).not.toBeNull();
+      expect(
+        new Date(a.humanReviewedAt!).getTime(),
+        `Assessment ${a.id} was reviewed before it was completed`,
+      ).toBeGreaterThanOrEqual(new Date(a.completedAt).getTime());
+      expect(
+        a.calibrationNotes.length,
+        `Assessment ${a.id} needs calibration rationale for recruiter trust`,
+      ).toBeGreaterThanOrEqual(40);
+    }
+  });
+
+  it("pending assessments remain queued for calibration instead of carrying premature review", () => {
+    const pendingAssessments = demoAssessments.filter((a) => a.result === "pending");
+    expect(pendingAssessments.length).toBeGreaterThan(0);
+    for (const a of pendingAssessments) {
+      expect(
+        a.humanReviewedAt,
+        `Pending assessment ${a.id} should not have a completed human review`,
+      ).toBeNull();
+      expect(
+        a.calibrationNotes.toLowerCase(),
+        `Pending assessment ${a.id} should explain its calibration queue`,
+      ).toContain("queued");
+    }
+  });
 });

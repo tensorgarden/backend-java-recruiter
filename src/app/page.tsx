@@ -337,6 +337,13 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
         </Badge>
       </div>
       <p className="text-xs text-slate-500">{assessment.notes}</p>
+      <div className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+        <span className="font-semibold text-slate-600">
+          {assessment.humanReviewedAt ? "Human calibration" : "Calibration queue"}
+          :
+        </span>{" "}
+        {assessment.calibrationNotes}
+      </div>
       <div className="mt-1 text-xs text-slate-400">
         Graded by {assessment.grader} ·{" "}
         {new Date(assessment.completedAt).toLocaleDateString("en-US", {
