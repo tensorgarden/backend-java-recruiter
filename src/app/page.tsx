@@ -113,6 +113,13 @@ function statusTone(status: string) {
   return "slate";
 }
 
+const aiPolicyLabels: Record<Assessment["aiAssistancePolicy"], string> = {
+  not_allowed: "AI not allowed",
+  allowed_with_disclosure: "AI allowed with disclosure",
+  company_sandbox: "Approved AI sandbox",
+  unknown: "AI use pending review",
+};
+
 function formatCurrency(n: number): string {
   return `$${(n / 1000).toFixed(0)}K`;
 }
@@ -343,6 +350,10 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
           :
         </span>{" "}
         {assessment.calibrationNotes}
+      </div>
+      <div className="mt-2 rounded-lg bg-indigo-50/70 px-3 py-2 text-xs text-indigo-700">
+        <span className="font-semibold">AI fluency signal:</span>{" "}
+        {aiPolicyLabels[assessment.aiAssistancePolicy]} · {assessment.aiFluencyReview}
       </div>
       <div className="mt-1 text-xs text-slate-400">
         Graded by {assessment.grader} ·{" "}

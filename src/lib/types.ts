@@ -24,6 +24,12 @@ export type AssessmentType = "coding" | "system_design" | "behavioral" | "take_h
 
 export type AssessmentResult = "pass" | "marginal" | "fail" | "pending";
 
+export type AiAssistancePolicy =
+  | "not_allowed"
+  | "allowed_with_disclosure"
+  | "company_sandbox"
+  | "unknown";
+
 export interface Candidate {
   id: string;
   fullName: string;
@@ -71,6 +77,9 @@ export interface Assessment {
   grader: string;
   humanReviewedAt: string | null;
   calibrationNotes: string;
+  aiAssistancePolicy: AiAssistancePolicy;
+  aiUsageEvidence: string[];
+  aiFluencyReview: string;
   completedAt: string;
   notes: string;
 }

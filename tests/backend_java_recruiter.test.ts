@@ -343,4 +343,51 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
       ).toContain("queued");
     }
   });
+
+  // Pain point: AI-assisted technical screens must evaluate how candidates use
+  // AI, not just whether they used it. Approved tools, disclosure, evidence,
+  // and live-debug follow-up make the skill signal recruiter-defensible.
+  it("coding and take-home assessments record AI assistance policy and evidence", () => {
+    const practicalAssessments = demoAssessments.filter((a) =>
+      a.type === "coding" || a.type === "take_home",
+    );
+    expect(practicalAssessments.length).toBeGreaterThan(0);
+    for (const a of practicalAssessments) {
+      if (a.result === "pending") {
+        expect(a.aiAssistancePolicy).toBe("unknown");
+        expect(a.aiFluencyReview.toLowerCase()).toContain("pending");
+        continue;
+      }
+      expect(
+        a.aiAssistancePolicy,
+        `Assessment ${a.id} needs an explicit AI-use policy`,
+      ).not.toBe("unknown");
+      expect(
+        a.aiUsageEvidence.length,
+        `Assessment ${a.id} needs AI-use evidence or disclosure artifacts`,
+      ).toBeGreaterThan(0);
+      expect(
+        a.aiFluencyReview.length,
+        `Assessment ${a.id} needs a recruiter-readable AI fluency review`,
+      ).toBeGreaterThanOrEqual(60);
+    }
+  });
+
+  it("AI-assisted assessment reviews prove candidates can reason beyond generated output", () => {
+    const assistedAssessments = demoAssessments.filter(
+      (a) =>
+        a.result !== "pending" &&
+        (a.aiAssistancePolicy === "allowed_with_disclosure" ||
+          a.aiAssistancePolicy === "company_sandbox"),
+    );
+    expect(assistedAssessments.length).toBeGreaterThan(0);
+    for (const a of assistedAssessments) {
+      const signal = `${a.aiFluencyReview} ${a.aiUsageEvidence.join(" ")}`.toLowerCase();
+      expect(
+        signal,
+        `Assessment ${a.id} should show debugging, explanation, disclosure, or trade-off review`,
+      ).toMatch(/debug|correct|explain|trade-off|test|disclos|reject/);
+    }
+  });
+
 });
