@@ -113,6 +113,14 @@ function statusTone(status: string) {
   return "slate";
 }
 
+function integrityTone(
+  risk: Candidate["integrity"]["fraudRisk"],
+): "green" | "amber" | "red" {
+  if (risk === "low") return "green";
+  if (risk === "medium") return "amber";
+  return "red";
+}
+
 const aiPolicyLabels: Record<Assessment["aiAssistancePolicy"], string> = {
   not_allowed: "AI not allowed",
   allowed_with_disclosure: "AI allowed with disclosure",
@@ -200,6 +208,16 @@ function CandidateRow({ candidate }: { candidate: Candidate }) {
         <span className="text-slate-400">/100</span>
       </td>
       <td className="py-3 px-4">
+        <Badge tone={integrityTone(candidate.integrity.fraudRisk)}>
+          {candidate.integrity.fraudRisk} risk
+        </Badge>
+        <div className="mt-1 text-xs text-slate-400">
+          {candidate.integrity.identityStatus === "verified"
+            ? "ID verified"
+            : "ID follow-up"}
+        </div>
+      </td>
+      <td className="py-3 px-4">
         <div className="flex flex-wrap gap-1 max-w-[160px]">
           {candidate.skills.slice(0, 3).map((s) => (
             <Badge key={s} tone="slate">
@@ -238,6 +256,7 @@ function CandidateTable() {
               <th className="py-2 px-4">Candidate</th>
               <th className="py-2 px-4">Status</th>
               <th className="py-2 px-4">AI Score</th>
+              <th className="py-2 px-4">Integrity</th>
               <th className="py-2 px-4">Skills</th>
               <th className="py-2 px-4">Expected</th>
               <th className="py-2 px-4">Req</th>

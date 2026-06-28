@@ -30,6 +30,17 @@ export type AiAssistancePolicy =
   | "company_sandbox"
   | "unknown";
 
+export type VerificationStatus = "verified" | "needs_follow_up" | "not_started";
+export type CandidateFraudRisk = "low" | "medium" | "high";
+
+export interface CandidateIntegritySignal {
+  identityStatus: VerificationStatus;
+  workHistoryStatus: VerificationStatus;
+  liveInterviewStatus: VerificationStatus;
+  fraudRisk: CandidateFraudRisk;
+  evidence: string[];
+}
+
 export interface Candidate {
   id: string;
   fullName: string;
@@ -48,6 +59,7 @@ export interface Candidate {
   appliedAt: string;
   lastContactAt: string | null;
   notes: string;
+  integrity: CandidateIntegritySignal;
 }
 
 export interface JobReq {

@@ -111,6 +111,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-04-10T14:30:00Z",
     lastContactAt: "2026-06-09T09:15:00Z",
     notes: "Strong experience with event-driven architectures. Previously at Stripe.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "ID rechecked before live team interview",
+        "Work history matched Stripe reference and LinkedIn employment dates",
+        "Live concurrency follow-up matched take-home implementation choices",
+      ],
+    },
   },
   {
     id: "cand_002",
@@ -130,6 +141,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-02-20T11:00:00Z",
     lastContactAt: "2026-06-08T16:45:00Z",
     notes: "Referred by current team member. Strong culture fit.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "Referral source confirmed current team-member relationship",
+        "Employment dates verified against Databridge reference",
+        "Offer-stage live panel confirmed candidate matched phone-screen notes",
+      ],
+    },
   },
   {
     id: "cand_003",
@@ -149,6 +171,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-04-05T10:00:00Z",
     lastContactAt: "2026-06-07T14:00:00Z",
     notes: "Kotlin OSS contributor. Built gRPC framework used at AWS.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "needs_follow_up",
+      liveInterviewStatus: "not_started",
+      fraudRisk: "medium",
+      evidence: [
+        "GitHub maintainer identity matched long-running Kotlin commit history",
+        "CloudScale employment verification is pending recruiter follow-up",
+        "Camera-on coding session scheduled to rule out proxy interview risk",
+      ],
+    },
   },
   {
     id: "cand_004",
@@ -168,6 +201,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-05-22T09:00:00Z",
     lastContactAt: "2026-06-04T11:30:00Z",
     notes: "Capital markets background. Strong concurrent systems knowledge.",
+    integrity: {
+      identityStatus: "needs_follow_up",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "not_started",
+      fraudRisk: "medium",
+      evidence: [
+        "Agency submission requires direct ID verification before technical panel",
+        "TradeFlow work history verified through agency reference packet",
+        "Phone-screen notes include follow-up to compare live debugging style",
+      ],
+    },
   },
   {
     id: "cand_005",
@@ -187,6 +231,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-02-14T08:00:00Z",
     lastContactAt: "2026-05-20T10:00:00Z",
     notes: "Started June 2. Ramping up on payments domain.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "Onboarding identity check completed before start date",
+        "QuickShip reference confirmed logistics platform ownership",
+        "Live payments-domain interview matched take-home API decisions",
+      ],
+    },
   },
   {
     id: "cand_006",
@@ -206,6 +261,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-05-01T13:00:00Z",
     lastContactAt: "2026-06-06T15:30:00Z",
     notes: "Strong infra background but less Kotlin depth. Consider for senior instead of staff.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "Referral chain verified through current NetScale engineering contact",
+        "Work history confirmed for Kubernetes and AWS platform ownership",
+        "System-design panel included unscripted trade-off questions",
+      ],
+    },
   },
   {
     id: "cand_007",
@@ -225,6 +291,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-04-18T07:00:00Z",
     lastContactAt: "2026-05-15T12:00:00Z",
     notes: "Declined. Visa timeline too long; accepted local offer in Berlin.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "Stack Overflow profile matched verified email and public contributions",
+        "Employment history aligned with Germany-based engineering references",
+        "Live visa-timeline conversation matched prior recruiter notes",
+      ],
+    },
   },
   {
     id: "cand_008",
@@ -244,6 +321,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-05-10T16:00:00Z",
     lastContactAt: "2026-06-03T09:00:00Z",
     notes: "Completed take-home. Scheduling live coding round.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "not_started",
+      fraudRisk: "low",
+      evidence: [
+        "Inbound application identity verified before take-home review",
+        "HealthTech Africa reference confirmed API and GraphQL ownership",
+        "Live coding session scheduled to validate take-home authorship",
+      ],
+    },
   },
   {
     id: "cand_009",
@@ -263,6 +351,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-06-01T10:00:00Z",
     lastContactAt: "2026-06-05T13:00:00Z",
     notes: "Overqualified on paper but open to IC staff role. Reach out for exploratory.",
+    integrity: {
+      identityStatus: "needs_follow_up",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "not_started",
+      fraudRisk: "medium",
+      evidence: [
+        "Principal-level outreach needs identity follow-up before exploratory screen",
+        "Oracle employment signals match public conference and patent history",
+        "Recruiter flagged salary and level mismatch for live conversation",
+      ],
+    },
   },
   {
     id: "cand_010",
@@ -282,6 +381,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-04-25T08:00:00Z",
     lastContactAt: "2026-06-10T10:00:00Z",
     notes: "Offer extended June 9. Expecting response by June 13.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "GitHub identity matched Spotify email-domain contribution history",
+        "Work history verified during offer-stage reference check",
+        "Live system-design panel confirmed unaided distributed-systems reasoning",
+      ],
+    },
   },
   {
     id: "cand_011",
@@ -301,6 +411,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-05-28T14:00:00Z",
     lastContactAt: "2026-06-02T11:00:00Z",
     notes: "Low experience but strong project portfolio. Consider junior track.",
+    integrity: {
+      identityStatus: "needs_follow_up",
+      workHistoryStatus: "needs_follow_up",
+      liveInterviewStatus: "not_started",
+      fraudRisk: "medium",
+      evidence: [
+        "Agency profile has junior-to-mid title mismatch requiring recruiter follow-up",
+        "StartupX work history awaits direct reference verification",
+        "Portfolio review will include live walkthrough to reduce proxy-work risk",
+      ],
+    },
   },
   {
     id: "cand_012",
@@ -320,6 +441,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-04-12T09:00:00Z",
     lastContactAt: "2026-05-20T16:00:00Z",
     notes: "Withdrew after accepting counter-offer from current employer.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "LinkedIn identity matched Rakuten engineering network",
+        "Work history verified before candidate withdrew",
+        "Live screen matched resume claims before counter-offer withdrawal",
+      ],
+    },
   },
   {
     id: "cand_013",
@@ -339,6 +471,17 @@ export const demoCandidates: Candidate[] = [
     appliedAt: "2026-05-05T12:00:00Z",
     lastContactAt: "2026-06-09T08:30:00Z",
     notes: "Met at KubeCon. Strong infra side; needs payments domain ramp.",
+    integrity: {
+      identityStatus: "verified",
+      workHistoryStatus: "verified",
+      liveInterviewStatus: "verified",
+      fraudRisk: "low",
+      evidence: [
+        "Conference source verified candidate identity at KubeCon follow-up",
+        "Tesla platform work validated through domain-specific live questions",
+        "Team interview scheduled because live debug exposed real concurrency gaps",
+      ],
+    },
   },
 ];
 

@@ -390,4 +390,63 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+
+  // Pain point: AI-generated resumes, synthetic identities, and proxy interviews
+  // are especially risky in remote technical hiring. Late-stage candidates need
+  // identity, work-history, and live-interview evidence before they consume
+  // hiring-manager time or reach offer.
+  it("late-stage candidates have identity, work-history, and live-interview integrity signals", () => {
+    const lateStages = new Set(["system_design", "team_interview", "offer", "hired"]);
+    const lateStageCandidates = demoCandidates.filter((c) => lateStages.has(c.status));
+    expect(lateStageCandidates.length).toBeGreaterThan(0);
+
+    for (const c of lateStageCandidates) {
+      expect(
+        c.integrity.identityStatus,
+        `Candidate ${c.id} is ${c.status} but identity is not verified`,
+      ).toBe("verified");
+      expect(
+        c.integrity.workHistoryStatus,
+        `Candidate ${c.id} is ${c.status} but work history is not verified`,
+      ).toBe("verified");
+      expect(
+        c.integrity.liveInterviewStatus,
+        `Candidate ${c.id} is ${c.status} but live interview integrity is unresolved`,
+      ).toBe("verified");
+      expect(
+        c.integrity.fraudRisk,
+        `Candidate ${c.id} is late-stage with high fraud risk`,
+      ).not.toBe("high");
+    }
+  });
+
+  it("candidate fraud follow-ups include recruiter-readable evidence", () => {
+    for (const c of demoCandidates) {
+      expect(
+        c.integrity.evidence.length,
+        `Candidate ${c.id} needs at least two integrity evidence notes`,
+      ).toBeGreaterThanOrEqual(2);
+
+      const hasIncompleteCheck =
+        c.integrity.identityStatus !== "verified" ||
+        c.integrity.workHistoryStatus !== "verified" ||
+        c.integrity.liveInterviewStatus !== "verified";
+
+      if (hasIncompleteCheck) {
+        const evidence = c.integrity.evidence.join(" ").toLowerCase();
+        expect(
+          evidence,
+          `Candidate ${c.id} has incomplete verification but no explicit follow-up evidence`,
+        ).toMatch(/follow-up|pending|scheduled|requires|awaits|rule out|review/);
+      }
+
+      if (c.integrity.fraudRisk === "high") {
+        expect(
+          ["sourced", "screening"],
+          `Candidate ${c.id} should not advance while high fraud risk is unresolved`,
+        ).toContain(c.status);
+      }
+    }
+  });
+
 });
