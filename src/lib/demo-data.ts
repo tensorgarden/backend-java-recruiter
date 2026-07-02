@@ -116,6 +116,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "ID rechecked before live team interview",
         "Work history matched Stripe reference and LinkedIn employment dates",
@@ -146,6 +148,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "Referral source confirmed current team-member relationship",
         "Employment dates verified against Databridge reference",
@@ -176,6 +180,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "needs_follow_up",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      reviewOwner: "Jenna Park",
+      nextReviewAt: "2026-06-12T17:00:00Z",
       evidence: [
         "GitHub maintainer identity matched long-running Kotlin commit history",
         "CloudScale employment verification is pending recruiter follow-up",
@@ -206,6 +212,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      reviewOwner: "Sanya Gupta",
+      nextReviewAt: "2026-06-11T18:00:00Z",
       evidence: [
         "Agency submission requires direct ID verification before technical panel",
         "TradeFlow work history verified through agency reference packet",
@@ -236,6 +244,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "Onboarding identity check completed before start date",
         "QuickShip reference confirmed logistics platform ownership",
@@ -266,6 +276,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "Referral chain verified through current NetScale engineering contact",
         "Work history confirmed for Kubernetes and AWS platform ownership",
@@ -296,6 +308,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "Stack Overflow profile matched verified email and public contributions",
         "Employment history aligned with Germany-based engineering references",
@@ -326,6 +340,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "low",
+      reviewOwner: "Derek Okonkwo",
+      nextReviewAt: "2026-06-12T15:00:00Z",
       evidence: [
         "Inbound application identity verified before take-home review",
         "HealthTech Africa reference confirmed API and GraphQL ownership",
@@ -356,6 +372,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      reviewOwner: "Sanya Gupta",
+      nextReviewAt: "2026-06-13T17:00:00Z",
       evidence: [
         "Principal-level outreach needs identity follow-up before exploratory screen",
         "Oracle employment signals match public conference and patent history",
@@ -386,6 +404,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "GitHub identity matched Spotify email-domain contribution history",
         "Work history verified during offer-stage reference check",
@@ -416,6 +436,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "needs_follow_up",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      reviewOwner: "Sanya Gupta",
+      nextReviewAt: "2026-06-11T16:00:00Z",
       evidence: [
         "Agency profile has junior-to-mid title mismatch requiring recruiter follow-up",
         "StartupX work history awaits direct reference verification",
@@ -446,6 +468,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "LinkedIn identity matched Rakuten engineering network",
         "Work history verified before candidate withdrew",
@@ -476,6 +500,8 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      reviewOwner: null,
+      nextReviewAt: null,
       evidence: [
         "Conference source verified candidate identity at KubeCon follow-up",
         "Tesla platform work validated through domain-specific live questions",

@@ -420,6 +420,48 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  it("unresolved integrity risks have an owner and near-term review date", () => {
+    const referenceTime = new Date("2026-06-10T00:00:00Z").getTime();
+    const sevenDaysLater = referenceTime + 7 * 86_400_000;
+
+    for (const c of demoCandidates) {
+      const hasIncompleteCheck =
+        c.integrity.identityStatus !== "verified" ||
+        c.integrity.workHistoryStatus !== "verified" ||
+        c.integrity.liveInterviewStatus !== "verified";
+      const needsReview = hasIncompleteCheck || c.integrity.fraudRisk !== "low";
+
+      if (!needsReview) continue;
+
+      expect(
+        c.integrity.reviewOwner,
+        `Candidate ${c.id} has unresolved integrity risk but no review owner`,
+      ).not.toBeNull();
+      expect(
+        c.integrity.reviewOwner ?? "",
+        `Candidate ${c.id} needs a named integrity review owner`,
+      ).toMatch(/\w+ \w+/);
+
+      expect(
+        c.integrity.nextReviewAt,
+        `Candidate ${c.id} has unresolved integrity risk but no review deadline`,
+      ).not.toBeNull();
+      const reviewTime = new Date(c.integrity.nextReviewAt!).getTime();
+      expect(
+        Number.isNaN(reviewTime),
+        `Candidate ${c.id} has an invalid review deadline`,
+      ).toBe(false);
+      expect(
+        reviewTime,
+        `Candidate ${c.id} review deadline should be in the future`,
+      ).toBeGreaterThan(referenceTime);
+      expect(
+        reviewTime,
+        `Candidate ${c.id} review deadline should be within 7 days`,
+      ).toBeLessThanOrEqual(sevenDaysLater);
+    }
+  });
+
   it("candidate fraud follow-ups include recruiter-readable evidence", () => {
     for (const c of demoCandidates) {
       expect(

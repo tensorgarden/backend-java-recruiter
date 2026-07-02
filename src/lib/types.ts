@@ -38,6 +38,8 @@ export interface CandidateIntegritySignal {
   workHistoryStatus: VerificationStatus;
   liveInterviewStatus: VerificationStatus;
   fraudRisk: CandidateFraudRisk;
+  reviewOwner: string | null;
+  nextReviewAt: string | null;
   evidence: string[];
 }
 

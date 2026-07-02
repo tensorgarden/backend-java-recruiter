@@ -216,6 +216,15 @@ function CandidateRow({ candidate }: { candidate: Candidate }) {
             ? "ID verified"
             : "ID follow-up"}
         </div>
+        {candidate.integrity.nextReviewAt && (
+          <div className="mt-1 text-xs font-medium text-amber-700">
+            Review by {candidate.integrity.reviewOwner || "assigned recruiter"} ·{" "}
+            {new Date(candidate.integrity.nextReviewAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
+        )}
       </td>
       <td className="py-3 px-4">
         <div className="flex flex-wrap gap-1 max-w-[160px]">
