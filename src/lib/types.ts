@@ -32,12 +32,18 @@ export type AiAssistancePolicy =
 
 export type VerificationStatus = "verified" | "needs_follow_up" | "not_started";
 export type CandidateFraudRisk = "low" | "medium" | "high";
+export type OfferStageReverificationStatus =
+  | "not_started"
+  | "scheduled"
+  | "verified"
+  | "not_required";
 
 export interface CandidateIntegritySignal {
   identityStatus: VerificationStatus;
   workHistoryStatus: VerificationStatus;
   liveInterviewStatus: VerificationStatus;
   fraudRisk: CandidateFraudRisk;
+  offerStageReverificationStatus: OfferStageReverificationStatus;
   reviewOwner: string | null;
   nextReviewAt: string | null;
   evidence: string[];

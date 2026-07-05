@@ -491,4 +491,45 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+
+  // Pain point: candidate identity fraud can slip past early screens, so
+  // offer and start decisions need explicit re-verification instead of
+  // relying on an application-time ID check.
+  it("offer and hired candidates have explicit offer-stage identity re-verification", () => {
+    const irreversibleStages = new Set(["offer", "hired"]);
+
+    for (const c of demoCandidates) {
+      if (!irreversibleStages.has(c.status)) continue;
+
+      expect(
+        c.integrity.offerStageReverificationStatus,
+        `Candidate ${c.id} is ${c.status} without offer-stage re-verification`,
+      ).toBe("verified");
+
+      const evidence = c.integrity.evidence.join(" ").toLowerCase();
+      expect(
+        evidence,
+        `Candidate ${c.id} needs recruiter-readable offer/onboarding re-verification evidence`,
+      ).toMatch(/offer-stage|onboarding|start date/);
+    }
+  });
+
+  it("pre-offer active candidates do not claim completed offer-stage re-verification", () => {
+    const preOfferStages = new Set([
+      "sourced",
+      "screening",
+      "coding_assessment",
+      "system_design",
+      "team_interview",
+    ]);
+
+    for (const c of demoCandidates) {
+      if (!preOfferStages.has(c.status)) continue;
+      expect(
+        c.integrity.offerStageReverificationStatus,
+        `Candidate ${c.id} is only ${c.status} but claims completed offer-stage verification`,
+      ).not.toBe("verified");
+    }
+  });
+
 });

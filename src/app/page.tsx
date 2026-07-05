@@ -128,6 +128,16 @@ const aiPolicyLabels: Record<Assessment["aiAssistancePolicy"], string> = {
   unknown: "AI use pending review",
 };
 
+const offerReverificationLabels: Record<
+  Candidate["integrity"]["offerStageReverificationStatus"],
+  string
+> = {
+  not_started: "not started",
+  scheduled: "scheduled",
+  verified: "verified",
+  not_required: "not required",
+};
+
 function formatCurrency(n: number): string {
   return `$${(n / 1000).toFixed(0)}K`;
 }
@@ -215,6 +225,9 @@ function CandidateRow({ candidate }: { candidate: Candidate }) {
           {candidate.integrity.identityStatus === "verified"
             ? "ID verified"
             : "ID follow-up"}
+        </div>
+        <div className="mt-1 text-xs text-slate-400">
+          Offer recheck: {offerReverificationLabels[candidate.integrity.offerStageReverificationStatus]}
         </div>
         {candidate.integrity.nextReviewAt && (
           <div className="mt-1 text-xs font-medium text-amber-700">

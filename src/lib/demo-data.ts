@@ -116,6 +116,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -148,6 +149,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "verified",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -180,6 +182,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "needs_follow_up",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: "Jenna Park",
       nextReviewAt: "2026-06-12T17:00:00Z",
       evidence: [
@@ -212,6 +215,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: "Sanya Gupta",
       nextReviewAt: "2026-06-11T18:00:00Z",
       evidence: [
@@ -244,6 +248,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "verified",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -276,6 +281,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -308,6 +314,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_required",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -340,6 +347,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: "Derek Okonkwo",
       nextReviewAt: "2026-06-12T15:00:00Z",
       evidence: [
@@ -372,6 +380,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: "Sanya Gupta",
       nextReviewAt: "2026-06-13T17:00:00Z",
       evidence: [
@@ -404,6 +413,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "verified",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -436,6 +446,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "needs_follow_up",
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: "Sanya Gupta",
       nextReviewAt: "2026-06-11T16:00:00Z",
       evidence: [
@@ -468,6 +479,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_required",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
@@ -500,6 +512,7 @@ export const demoCandidates: Candidate[] = [
       workHistoryStatus: "verified",
       liveInterviewStatus: "verified",
       fraudRisk: "low",
+      offerStageReverificationStatus: "not_started",
       reviewOwner: null,
       nextReviewAt: null,
       evidence: [
