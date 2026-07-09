@@ -491,6 +491,31 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: 2026 candidate-fraud detection has to happen during the
+  // interview itself. Verified live-interview checks should document
+  // resume-to-interview consistency, depth of explanation, or unscripted
+  // reasoning — not just a generic identity pass.
+  it("verified live-interview checks include real-time consistency evidence", () => {
+    const verifiedLiveInterviewCandidates = demoCandidates.filter(
+      (c) => c.integrity.liveInterviewStatus === "verified",
+    );
+    expect(verifiedLiveInterviewCandidates.length).toBeGreaterThan(0);
+
+    const liveInterviewPattern = /live|panel|interview|screen|system-design|debug|onboarding|offer-stage/i;
+    const consistencyPattern = /matched|unscripted|trade-off|debug|explain|choices|reasoning|domain-specific|concurrency|notes/i;
+
+    for (const c of verifiedLiveInterviewCandidates) {
+      const evidence = `${c.notes} ${c.integrity.evidence.join(" ")}`;
+      expect(
+        evidence,
+        `Candidate ${c.id} has verified live interview status without interview-time evidence`,
+      ).toMatch(liveInterviewPattern);
+      expect(
+        evidence,
+        `Candidate ${c.id} needs consistency, explanation, or reasoning evidence for live verification`,
+      ).toMatch(consistencyPattern);
+    }
+  });
 
   // Pain point: candidate identity fraud can slip past early screens, so
   // offer and start decisions need explicit re-verification instead of
