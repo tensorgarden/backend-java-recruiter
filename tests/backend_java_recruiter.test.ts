@@ -557,4 +557,43 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: a polished take-home can be completed by AI or a proxy. Keep
+  // candidates before system design until a live session establishes that the
+  // person in the pipeline can explain and modify the submitted work.
+  it("candidates without live-interview verification stay in validation stages", () => {
+    const validationStages = new Set(["sourced", "screening", "coding_assessment"]);
+
+    for (const c of demoCandidates) {
+      if (c.integrity.liveInterviewStatus === "verified") continue;
+      expect(
+        validationStages,
+        `Candidate ${c.id} advanced to ${c.status} before live-interview verification`,
+      ).toContain(c.status);
+    }
+  });
+
+  it("unverified take-home passes include a scheduled live authorship check", () => {
+    const candidatesById = new Map(demoCandidates.map((c) => [c.id, c]));
+    const takeHomePasses = demoAssessments.filter(
+      (assessment) => assessment.type === "take_home" && assessment.result === "pass",
+    );
+    expect(takeHomePasses.length).toBeGreaterThan(0);
+
+    for (const assessment of takeHomePasses) {
+      const candidate = candidatesById.get(assessment.candidateId);
+      expect(candidate, `Assessment ${assessment.id} references an unknown candidate`).toBeDefined();
+      if (!candidate || candidate.integrity.liveInterviewStatus === "verified") continue;
+
+      const evidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a live check tied to take-home authorship`,
+      ).toMatch(/live|camera-on/i);
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a scheduled validation, walkthrough, or follow-up`,
+      ).toMatch(/scheduled|validate|authorship|walkthrough|follow-up/i);
+    }
+  });
+
 });
