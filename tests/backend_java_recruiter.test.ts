@@ -596,4 +596,49 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Deepfake video can survive a routine remote call, so elevated-risk candidates
+  // need both an in-session liveness check and an unexpected technical challenge.
+  it("elevated fraud risks have synchronous liveness and contextual challenge evidence", () => {
+    const elevatedRiskCandidates = demoCandidates.filter(
+      (candidate) => candidate.integrity.fraudRisk !== "low",
+    );
+    expect(elevatedRiskCandidates.length).toBeGreaterThan(0);
+
+    for (const candidate of elevatedRiskCandidates) {
+      const evidence = candidate.integrity.evidence.join(" ");
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a camera-on or live liveness check`,
+      ).toMatch(/camera-on|\blive\b|video|screen/i);
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs evidence aimed at deepfake or proxy risk`,
+      ).toMatch(/liveness|deepfake|proxy|visual continuity|head turn|hand movement/i);
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs an unexpected contextual challenge`,
+      ).toMatch(/unexpected|domain-specific|unscripted|debug|walkthrough|follow-up/i);
+    }
+  });
+
+  it("unresolved identity checks include a physical liveness step before late stages", () => {
+    const identityFollowUps = demoCandidates.filter(
+      (candidate) => candidate.integrity.identityStatus !== "verified",
+    );
+    const validationStages = new Set(["sourced", "screening", "coding_assessment"]);
+    expect(identityFollowUps.length).toBeGreaterThan(0);
+
+    for (const candidate of identityFollowUps) {
+      const evidence = candidate.integrity.evidence.join(" ");
+      expect(
+        validationStages,
+        `Candidate ${candidate.id} advanced to ${candidate.status} before identity liveness review`,
+      ).toContain(candidate.status);
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs identity-linked liveness evidence`,
+      ).toMatch(/camera-on identity liveness|identity liveness.*(?:head turn|hand movement)/i);
+    }
+  });
+
 });
