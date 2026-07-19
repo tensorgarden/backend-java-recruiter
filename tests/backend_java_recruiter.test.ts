@@ -641,4 +641,52 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: fraud signals are missed when application, screening, and
+  // interview evidence stays fragmented across separate hiring checkpoints.
+  // Active candidates should carry both an upstream corroboration signal and
+  // live-stage evidence in one recruiter-readable integrity record.
+  it("connects active candidate evidence across application and interview checkpoints", () => {
+    const activeStages = new Set([
+      "sourced",
+      "screening",
+      "coding_assessment",
+      "system_design",
+      "team_interview",
+      "offer",
+    ]);
+    const upstreamEvidencePattern =
+      /identity|work history|employment|reference|referral|github|agency|application|profile|conference|patent|source/i;
+    const liveCheckpointPattern =
+      /camera-on|\blive\b|panel|interview|screen|system-design|debug|offer-stage/i;
+
+    for (const candidate of demoCandidates) {
+      if (!activeStages.has(candidate.status)) continue;
+      const evidence = candidate.integrity.evidence.join(" ");
+
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs an upstream identity or work-history signal`,
+      ).toMatch(upstreamEvidencePattern);
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a connected live-stage integrity signal`,
+      ).toMatch(liveCheckpointPattern);
+    }
+  });
+
+  it("elevated fraud risks include independently corroborated upstream evidence", () => {
+    const elevatedRiskCandidates = demoCandidates.filter(
+      (candidate) => candidate.integrity.fraudRisk !== "low",
+    );
+    expect(elevatedRiskCandidates.length).toBeGreaterThan(0);
+
+    for (const candidate of elevatedRiskCandidates) {
+      const evidence = candidate.integrity.evidence.join(" ");
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a source beyond self-reported resume claims`,
+      ).toMatch(/reference|github|public|conference|patent|agency/i);
+    }
+  });
+
 });
