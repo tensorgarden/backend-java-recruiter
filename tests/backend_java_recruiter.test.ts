@@ -462,6 +462,67 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: identity verification should target high-risk checkpoints without
+  // adding redundant friction for candidates whose identity, work history, and
+  // live interview evidence are already resolved.
+  it("keeps fully verified low-risk candidates out of the integrity review queue", () => {
+    const verifiedCandidates = demoCandidates.filter(
+      (candidate) =>
+        candidate.integrity.identityStatus === "verified" &&
+        candidate.integrity.workHistoryStatus === "verified" &&
+        candidate.integrity.liveInterviewStatus === "verified" &&
+        candidate.integrity.fraudRisk === "low",
+    );
+    expect(verifiedCandidates.length).toBeGreaterThan(0);
+
+    for (const candidate of verifiedCandidates) {
+      expect(
+        candidate.integrity.reviewOwner,
+        `Candidate ${candidate.id} is fully verified but still has a review owner`,
+      ).toBeNull();
+      expect(
+        candidate.integrity.nextReviewAt,
+        `Candidate ${candidate.id} is fully verified but still has a review deadline`,
+      ).toBeNull();
+    }
+  });
+
+  it("only queues targeted reviews for active candidates with unresolved integrity risk", () => {
+    const activeStages = new Set([
+      "sourced",
+      "screening",
+      "coding_assessment",
+      "system_design",
+      "team_interview",
+      "offer",
+    ]);
+    const queuedCandidates = demoCandidates.filter(
+      (candidate) =>
+        candidate.integrity.reviewOwner !== null ||
+        candidate.integrity.nextReviewAt !== null,
+    );
+    expect(queuedCandidates.length).toBeGreaterThan(0);
+
+    for (const candidate of queuedCandidates) {
+      const hasTargetedRisk =
+        candidate.integrity.identityStatus !== "verified" ||
+        candidate.integrity.workHistoryStatus !== "verified" ||
+        candidate.integrity.liveInterviewStatus !== "verified" ||
+        candidate.integrity.fraudRisk !== "low";
+
+      expect(
+        hasTargetedRisk,
+        `Candidate ${candidate.id} is queued without an unresolved integrity risk`,
+      ).toBe(true);
+      expect(
+        activeStages,
+        `Candidate ${candidate.id} is ${candidate.status} but remains in the active review queue`,
+      ).toContain(candidate.status);
+      expect(candidate.integrity.reviewOwner).not.toBeNull();
+      expect(candidate.integrity.nextReviewAt).not.toBeNull();
+    }
+  });
+
   it("candidate fraud follow-ups include recruiter-readable evidence", () => {
     for (const c of demoCandidates) {
       expect(
