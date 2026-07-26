@@ -221,7 +221,7 @@ export const demoCandidates: Candidate[] = [
       evidence: [
         "Agency submission requires direct ID verification before technical panel",
         "TradeFlow work history verified through agency reference packet",
-        "Camera-on identity liveness check and unexpected concurrency debugging follow-up scheduled before the technical panel",
+        "Camera-on identity liveness check and unexpected Kafka concurrency debugging follow-up scheduled before the technical panel",
       ],
     },
   },
@@ -386,7 +386,7 @@ export const demoCandidates: Candidate[] = [
       evidence: [
         "Principal-level outreach needs identity follow-up before exploratory screen",
         "Oracle employment signals match public conference and patent history",
-        "Camera-on identity liveness check and unexpected architecture follow-up scheduled to rule out deepfake or proxy use",
+        "Camera-on identity liveness check and unexpected Kubernetes architecture follow-up scheduled to rule out deepfake or proxy use",
       ],
     },
   },
@@ -452,7 +452,7 @@ export const demoCandidates: Candidate[] = [
       evidence: [
         "Agency profile has junior-to-mid title mismatch requiring recruiter follow-up",
         "StartupX work history awaits direct reference verification",
-        "Camera-on identity liveness check and live portfolio walkthrough scheduled to reduce deepfake or proxy-work risk",
+        "Camera-on identity liveness check and live Java portfolio walkthrough scheduled to reduce deepfake or proxy-work risk",
       ],
     },
   },

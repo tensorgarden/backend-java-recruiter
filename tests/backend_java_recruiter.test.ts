@@ -750,4 +750,34 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Generic liveness prompts can be rehearsed. Elevated-risk reviews should
+  // probe expertise the candidate actually claims so the challenge tests
+  // identity continuity and depth of experience at the same time.
+  it("ties elevated-risk contextual challenges to the candidate's claimed skills", () => {
+    const elevatedRiskCandidates = demoCandidates.filter(
+      (candidate) => candidate.integrity.fraudRisk !== "low",
+    );
+    expect(elevatedRiskCandidates.length).toBeGreaterThan(0);
+
+    const normalize = (value: string) =>
+      value.toLowerCase().replace(/[^a-z0-9+.#]+/g, " ").trim();
+
+    for (const candidate of elevatedRiskCandidates) {
+      const challengeEvidence = candidate.integrity.evidence
+        .filter((note) =>
+          /unexpected|follow-up|walkthrough|debug|domain-specific|unscripted/i.test(note),
+        )
+        .join(" ");
+      const normalizedEvidence = ` ${normalize(challengeEvidence)} `;
+      const matchedSkills = candidate.skills.filter((skill) =>
+        normalizedEvidence.includes(` ${normalize(skill)} `),
+      );
+
+      expect(
+        matchedSkills.length,
+        `Candidate ${candidate.id} needs a contextual challenge tied to a claimed skill`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
 });
