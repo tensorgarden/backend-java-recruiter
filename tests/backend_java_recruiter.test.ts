@@ -780,4 +780,58 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: generated applications and coaching services can reuse the same
+  // project story under different identities. A cross-funnel fingerprint makes
+  // that repetition reviewable instead of leaving each recruiter with an
+  // isolated, individually plausible profile.
+  const applicationClaimFingerprint = (candidate: {
+    currentRole: string;
+    currentCompany: string;
+    notes: string;
+  }) =>
+    [candidate.currentRole, candidate.currentCompany, candidate.notes]
+      .map((value) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim())
+      .join("|");
+
+  it("flags repeated application claims across different candidate identities", () => {
+    const firstClaim = applicationClaimFingerprint({
+      currentRole: "Senior Backend Engineer",
+      currentCompany: "Example Payments",
+      notes: "Owned the settlement API migration and Kafka cutover.",
+    });
+    const repeatedClaim = applicationClaimFingerprint({
+      currentRole: "senior backend engineer",
+      currentCompany: "Example Payments",
+      notes: "Owned the settlement API migration—and Kafka cutover!",
+    });
+
+    expect(repeatedClaim).toBe(firstClaim);
+  });
+
+  it("active candidate application claims are unique across the funnel", () => {
+    const activeStages = new Set([
+      "sourced",
+      "screening",
+      "coding_assessment",
+      "system_design",
+      "team_interview",
+      "offer",
+    ]);
+    const activeCandidates = demoCandidates.filter((candidate) =>
+      activeStages.has(candidate.status),
+    );
+    const seenClaims = new Map<string, string>();
+    expect(activeCandidates.length).toBeGreaterThan(1);
+
+    for (const candidate of activeCandidates) {
+      const fingerprint = applicationClaimFingerprint(candidate);
+      const firstCandidateId = seenClaims.get(fingerprint);
+      expect(
+        firstCandidateId,
+        `Candidates ${firstCandidateId} and ${candidate.id} repeat the same role, company, and project claim`,
+      ).toBeUndefined();
+      seenClaims.set(fingerprint, candidate.id);
+    }
+  });
+
 });
