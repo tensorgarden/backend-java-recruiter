@@ -834,4 +834,39 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: fabricated references can look plausible when recruiters use only
+  // candidate-supplied contacts. Verified work history should name an independent
+  // source, while unresolved checks should identify the channel recruiters will use.
+  it("grounds verified work history in independently sourced evidence", () => {
+    const verifiedWorkHistory = demoCandidates.filter(
+      (candidate) => candidate.integrity.workHistoryStatus === "verified",
+    );
+    expect(verifiedWorkHistory.length).toBeGreaterThan(0);
+
+    for (const candidate of verifiedWorkHistory) {
+      const evidence = candidate.integrity.evidence.join(" ");
+      expect(
+        evidence,
+        `Candidate ${candidate.id} has verified work history without a named independent source`,
+      ).toMatch(
+        /employer|employment|reference|referral|github|public|conference|patent|agency|stack overflow|network|contribution/i,
+      );
+    }
+  });
+
+  it("work-history follow-ups name a verification channel", () => {
+    const pendingWorkHistory = demoCandidates.filter(
+      (candidate) => candidate.integrity.workHistoryStatus !== "verified",
+    );
+    expect(pendingWorkHistory.length).toBeGreaterThan(0);
+
+    for (const candidate of pendingWorkHistory) {
+      const evidence = candidate.integrity.evidence.join(" ");
+      expect(
+        evidence,
+        `Candidate ${candidate.id} needs a concrete work-history verification channel`,
+      ).toMatch(/direct reference|employer|employment|public|recruiter follow-up/i);
+    }
+  });
+
 });
