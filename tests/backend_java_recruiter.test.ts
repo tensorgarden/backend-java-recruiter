@@ -869,4 +869,30 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Pain point: recruiters measured on time-to-fill and pipeline volume should
+  // not grade their own fraud homework. When the same recruiter advancing a
+  // candidate also owns the integrity review, a red flag can be waved through
+  // to protect the metric — so queued reviews belong with an independent
+  // reviewer who has no stake in the candidate's outcome.
+  it("assigns queued integrity reviews to a reviewer independent of the candidate's recruiter", () => {
+    const recruitersById = new Map(demoRecruiters.map((r) => [r.id, r]));
+    const queuedCandidates = demoCandidates.filter(
+      (candidate) =>
+        candidate.integrity.reviewOwner !== null ||
+        candidate.integrity.nextReviewAt !== null,
+    );
+    expect(queuedCandidates.length).toBeGreaterThan(0);
+
+    for (const candidate of queuedCandidates) {
+      const recruiter = recruitersById.get(candidate.recruiterId);
+      expect(
+        recruiter,
+        `Candidate ${candidate.id} references unknown recruiter ${candidate.recruiterId}`,
+      ).toBeDefined();
+      expect(
+        candidate.integrity.reviewOwner,
+        `Candidate ${candidate.id} integrity review is owned by the same recruiter advancing them`,
+      ).not.toBe(recruiter!.fullName);
+    }
+  });
 });

@@ -183,7 +183,7 @@ export const demoCandidates: Candidate[] = [
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
       offerStageReverificationStatus: "not_started",
-      reviewOwner: "Jenna Park",
+      reviewOwner: "Sanya Gupta",
       nextReviewAt: "2026-06-12T17:00:00Z",
       evidence: [
         "GitHub maintainer identity matched long-running Kotlin commit history",
@@ -216,7 +216,7 @@ export const demoCandidates: Candidate[] = [
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
       offerStageReverificationStatus: "not_started",
-      reviewOwner: "Sanya Gupta",
+      reviewOwner: "Jenna Park",
       nextReviewAt: "2026-06-11T18:00:00Z",
       evidence: [
         "Agency submission requires direct ID verification before technical panel",
@@ -348,7 +348,7 @@ export const demoCandidates: Candidate[] = [
       liveInterviewStatus: "not_started",
       fraudRisk: "low",
       offerStageReverificationStatus: "not_started",
-      reviewOwner: "Derek Okonkwo",
+      reviewOwner: "Jenna Park",
       nextReviewAt: "2026-06-12T15:00:00Z",
       evidence: [
         "Inbound application identity verified before take-home review",
@@ -381,7 +381,7 @@ export const demoCandidates: Candidate[] = [
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
       offerStageReverificationStatus: "not_started",
-      reviewOwner: "Sanya Gupta",
+      reviewOwner: "Derek Okonkwo",
       nextReviewAt: "2026-06-13T17:00:00Z",
       evidence: [
         "Principal-level outreach needs identity follow-up before exploratory screen",
@@ -447,7 +447,7 @@ export const demoCandidates: Candidate[] = [
       liveInterviewStatus: "not_started",
       fraudRisk: "medium",
       offerStageReverificationStatus: "not_started",
-      reviewOwner: "Sanya Gupta",
+      reviewOwner: "Derek Okonkwo",
       nextReviewAt: "2026-06-11T16:00:00Z",
       evidence: [
         "Agency profile has junior-to-mid title mismatch requiring recruiter follow-up",
