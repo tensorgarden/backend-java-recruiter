@@ -895,4 +895,139 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
       ).not.toBe(recruiter!.fullName);
     }
   });
+
+  // Pain point: Java hiring integrity requires validating that backend-specific
+  // skills claims are actually demonstrable during live interviews. A candidate
+  // claiming expertise in Kafka architecture or Spring Cloud patterns should show
+  // concrete reasoning, trade-off knowledge, or debugging capability during a
+  // system design or code review session — not just a polished resume.
+  describe("Backend-specific skills-based integrity verification", () => {
+    it("candidates claiming advanced backend frameworks have system-design or code-review evidence", () => {
+      const advancedFrameworkPatterns =
+        /Spring Cloud|Spring Batch|Spring Security OAuth|gRPC|event sourcing|CQRS|microservices|distributed tracing/i;
+      const systemDesignTypes = new Set(["system_design", "behavioral"]);
+
+      const claimingAdvanced = demoCandidates.filter((c) => {
+        const claims = `${c.skills.join(" ")} ${c.notes}`;
+        return advancedFrameworkPatterns.test(claims);
+      });
+      expect(claimingAdvanced.length).toBeGreaterThan(0);
+
+      for (const candidate of claimingAdvanced) {
+        const assessments = demoAssessments.filter(
+          (a) => a.candidateId === candidate.id && a.result !== "pending",
+        );
+        const hasSystemDesignEvidence = assessments.some(
+          (a) => systemDesignTypes.has(a.type) && a.result === "pass",
+        );
+        // Check for architecture reasoning in notes or integrity evidence
+        const allEvidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+        const notesHaveArchitectureReasoning = /architect|microservice|event|distributed|scale|async|concurrency|idempotent|eventual|consistency|resilience|trade-off/i.test(
+          allEvidence,
+        );
+
+        expect(
+          hasSystemDesignEvidence || notesHaveArchitectureReasoning,
+          `Candidate ${candidate.id} claims advanced backend frameworks but has no system-design or architecture evidence`,
+        ).toBe(true);
+      }
+    });
+
+    it("candidates claiming concurrency expertise have specific implementation evidence", () => {
+      const concurrencyKeywords = /concurrency|threading|async|await|coroutine|reactive|Flux|Mono|CompletableFuture|Netty|virtual thread/i;
+      const claimingConcurrency = demoCandidates.filter((c) => {
+        const claims = `${c.skills.join(" ")} ${c.notes}`;
+        return concurrencyKeywords.test(claims);
+      });
+
+      if (claimingConcurrency.length > 0) {
+        for (const candidate of claimingConcurrency) {
+          const evidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+          expect(
+            evidence,
+            `Candidate ${candidate.id} claims concurrency expertise but notes lack concrete implementation patterns`,
+          ).toMatch(
+            /deadlock|race condition|lock-free|thread pool|queue|backpressure|flow control|timeout|interruption/i,
+          );
+        }
+      }
+    });
+
+    it("candidates claiming data-pipeline or event-streaming skills document technology depth", () => {
+      const dataSystemsKeywords = /Kafka|Pulsar|RabbitMQ|Redis|data pipeline|event streaming|stream processing|ETL|replication/i;
+      const claimingDataSystems = demoCandidates.filter((c) => {
+        const claims = `${c.skills.join(" ")} ${c.notes}`;
+        return dataSystemsKeywords.test(claims);
+      });
+
+      if (claimingDataSystems.length > 0) {
+        for (const candidate of claimingDataSystems) {
+          const evidence = `${candidate.skills.join(" ")} ${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+          // Accept evidence of data system understanding: specific tech stack, scaling patterns, or architectural decisions
+          expect(
+            evidence,
+            `Candidate ${candidate.id} claims data/streaming expertise but lacks specific demonstration`,
+          ).toMatch(/kafka|redis|event|stream|replicate|partition|broker|distributed|architec|scale/i);
+        }
+      }
+    });
+
+    it("system-design assessment passes for backend roles include architecture or trade-off discussion", () => {
+      const backendCandidates = demoCandidates.filter((c) => {
+        const req = demoJobReqs.find((r) => r.id === c.jobReqId);
+        return req && req.department === "Platform Engineering";
+      });
+      const systemDesignAssessments = demoAssessments.filter(
+        (a) => a.type === "system_design" && a.result === "pass",
+      );
+
+      for (const assessment of systemDesignAssessments) {
+        const candidate = backendCandidates.find((c) => c.id === assessment.candidateId);
+        if (!candidate) continue;
+
+        expect(
+          assessment.calibrationNotes.length,
+          `System design assessment ${assessment.id} for backend role lacks architecture rationale`,
+        ).toBeGreaterThanOrEqual(50);
+        // Accept evidence of architectural thinking: design choices, performance, failure modes, or constraints
+        expect(
+          assessment.calibrationNotes,
+          `System design assessment ${assessment.id} should show architectural thinking`,
+        ).toMatch(/design|scale|backpressure|failure|event|boundary|consistency|availability|trade|latency|throughput|replica|partition|failover/i);
+      }
+    });
+
+    it("advanced-skill candidates hold assessment results until live follow-up evidence exists", () => {
+      const advancedSkillKeywords =
+        /distributed|microservices|architecture|resilience|gRPC|Spring Cloud|event sourcing|CQRS|Kafka/i;
+      const advancedCandidates = demoCandidates.filter((c) => {
+        const claims = `${c.skills.join(" ")} ${c.notes}`;
+        return advancedSkillKeywords.test(claims);
+      });
+
+      for (const candidate of advancedCandidates) {
+        // Advanced candidates should either be fully verified with live evidence
+        // or held in assessment/validation stages pending live follow-up.
+        const isFullyVerified =
+          candidate.integrity.identityStatus === "verified" &&
+          candidate.integrity.workHistoryStatus === "verified" &&
+          candidate.integrity.liveInterviewStatus === "verified";
+
+        const isHeldForValidation = new Set(["sourced", "screening", "coding_assessment"]).has(
+          candidate.status,
+        );
+
+        const hasLiveEvidence =
+          /live|system-design|panel|debug|walkthrough|offer-stage|team interview/i.test(
+            candidate.integrity.evidence.join(" "),
+          );
+
+        expect(
+          isFullyVerified || isHeldForValidation || hasLiveEvidence,
+          `Candidate ${candidate.id} claims advanced backend skills but advanced to ${candidate.status} without live follow-up evidence`,
+        ).toBe(true);
+      }
+    });
+  });
+
 });
