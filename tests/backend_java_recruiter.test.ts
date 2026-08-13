@@ -1030,4 +1030,63 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     });
   });
 
+  // Pain point: real-time AI tools such as second-screen answer feeds and live
+  // voice assistants are the default attack in 2026 live coding rounds. A
+  // policy declaration alone does not prove a "no AI" round was actually
+  // clean, so no-AI coding rounds need live-session enforcement evidence
+  // (screen share, webcam, proctoring) and flagged rounds must hold the
+  // candidate until an enforced supervised re-screen clears the signal.
+  describe("Live coding enforcement for no-AI rounds", () => {
+    it("no-AI coding rounds record live-session enforcement evidence, not just policy", () => {
+      const noAiCodingRounds = demoAssessments.filter(
+        (a) =>
+          a.type === "coding" &&
+          a.result !== "pending" &&
+          a.aiAssistancePolicy === "not_allowed",
+      );
+      expect(noAiCodingRounds.length).toBeGreaterThan(0);
+      for (const a of noAiCodingRounds) {
+        const evidence = a.aiUsageEvidence.join(" ").toLowerCase();
+        expect(
+          evidence,
+          `Assessment ${a.id} declares a no-AI coding round but lacks live-session enforcement evidence`,
+        ).toMatch(/screen.?share|webcam|proctor|session record|monitor/i);
+      }
+    });
+
+    it("suspected undisclosed AI use holds the candidate and requires an enforced re-screen", () => {
+      const suspects = demoAssessments.filter((a) => {
+        if (a.type !== "coding" || a.result === "pending") return false;
+        const text = `${a.aiUsageEvidence.join(" ")} ${a.notes} ${a.aiFluencyReview}`.toLowerCase();
+        return /off.?screen|faster than|could not explain/i.test(text);
+      });
+      expect(suspects.length).toBeGreaterThan(0);
+
+      const candidatesById = new Map(demoCandidates.map((c) => [c.id, c]));
+      const validationStages = new Set(["sourced", "screening", "coding_assessment"]);
+      for (const a of suspects) {
+        expect(
+          a.result,
+          `Assessment ${a.id} shows undisclosed-assistance signals but still passed`,
+        ).not.toBe("pass");
+        const reviewText = `${a.calibrationNotes} ${a.aiFluencyReview} ${a.notes}`.toLowerCase();
+        expect(
+          reviewText,
+          `Assessment ${a.id} needs a scheduled re-screen, not just a hold`,
+        ).toMatch(/re.?screen/);
+        expect(
+          reviewText,
+          `Assessment ${a.id} re-screen must enforce a monitoring channel`,
+        ).toMatch(/screen.?share|webcam|proctor|monitor/i);
+
+        const candidate = candidatesById.get(a.candidateId);
+        expect(candidate, `Assessment ${a.id} references an unknown candidate`).toBeDefined();
+        expect(
+          validationStages,
+          `Candidate ${a.candidateId} advanced to ${candidate?.status} after a flagged round`,
+        ).toContain(candidate?.status);
+      }
+    });
+  });
+
 });

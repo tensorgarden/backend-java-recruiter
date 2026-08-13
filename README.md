@@ -8,7 +8,7 @@ AI-assisted technical recruiter dashboard for sourcing, assessing, and hiring ba
 
 **Engineering evaluators.** Inspect the component architecture, TypeScript type system, and data model design. All components are inline in a single page.tsx with no external UI library. The domain model captures real recruiting complexity: multi-stage pipelines, skills-to-requisition matching, and AI confidence scores.
 
-**AI agents/screeners.** This README surfaces the architecture, stack, and quality gates. The repo demonstrates the pattern of a deeply-featured Next.js dashboard with 13 fictional candidates, 3 job requisitions, 8 assessments, 10 activity entries, and a full recruiter team.
+**AI agents/screeners.** This README surfaces the architecture, stack, and quality gates. The repo demonstrates the pattern of a deeply-featured Next.js dashboard with 13 fictional candidates, 3 job requisitions, 9 assessments, 10 activity entries, and a full recruiter team.
 
 ## Project story
 
@@ -36,6 +36,7 @@ This dashboard demonstrates that system. It shows what a purpose-built technical
 - **Multi-stage pipeline**: Seven stages from sourced through hired, each tracking candidate counts and conversion pass rates. The funnel visualization shows where candidates drop off.
 - **Skills-to-requisition matching**: Every candidate has a typed skills array; every requisition lists required skills. The data integrity tests verify that high-scored candidates share at least one skill with their target req.
 - **Assessment analytics**: Coding, system design, behavioral, and take-home assessments with pass/marginal/fail results, numeric scores, and grader commentary.
+- **Live-coding enforcement**: "No AI" coding rounds record live-session enforcement evidence such as screen share, webcam, or proctoring, not just a policy declaration. Rounds flagged for possible undisclosed AI assistance stay marginal and hold the candidate in validation until an enforced supervised re-screen clears the signal.
 - **Activity timeline**: Real-time feed of recruiter actions: messages sent, interviews scheduled, offers extended, feedback received. Each entry carries a positive/neutral/negative outcome marker.
 - **Recruiter performance**: Per-recruiter metrics including active requisitions, candidates in pipeline, Q2 hires, and average time-to-fill in days.
 
@@ -60,9 +61,9 @@ src/
     globals.css        Tailwind directives
   lib/
     types.ts           TypeScript interfaces (Candidate, JobReq, Assessment, etc.)
-    demo-data.ts       13 candidates, 3 reqs, 8 assessments, 10 activities
+    demo-data.ts       13 candidates, 3 reqs, 9 assessments, 10 activities
 tests/
-  backend_java_recruiter.test.ts   17 data-integrity tests
+  backend_java_recruiter.test.ts   51 data-integrity tests
 scripts/
   capture-screenshots.mjs          Playwright screenshot capture
 ```
@@ -85,7 +86,7 @@ All four gates are enforced in CI and must pass locally before pushing:
 ```bash
 npm run lint       # ESLint with --max-warnings=0
 npm run typecheck  # tsc --noEmit
-npm test           # vitest run (17 tests)
+npm test           # vitest run (51 tests)
 npm run build      # next build
 ```
 
@@ -95,7 +96,7 @@ All data is fictional and public-safe:
 
 - **13 candidates**: Senior through principal-level Java/Kotlin engineers across San Francisco, Austin, Seattle, New York, and remote locations. Statuses span sourced through hired with realistic pipeline distribution.
 - **3 job requisitions**: Senior Backend Engineer (Platform), Staff Platform Engineer (Infrastructure), Mid-Level Services Developer (Payments).
-- **8 assessments**: Coding and system design evaluations with pass/marginal/pending results and grader notes.
+- **9 assessments**: Coding, system design, and take-home evaluations with pass/marginal/pending results and grader notes, including a no-AI live coding round flagged for possible undisclosed AI use and held pending an enforced re-screen.
 - **10 activity entries**: Offers sent, interviews scheduled, feedback received, status changes.
 - **3 recruiters**: Jenna Park (senior), Derek Okonkwo (mid), Sanya Gupta (sourcing lead).
 - **7 pipeline stages**: Full recruitment funnel with candidate counts and conversion rates.

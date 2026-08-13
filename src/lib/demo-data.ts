@@ -341,7 +341,7 @@ export const demoCandidates: Candidate[] = [
     recruiterId: "rec_derek",
     appliedAt: "2026-05-10T16:00:00Z",
     lastContactAt: "2026-06-03T09:00:00Z",
-    notes: "Completed take-home. Scheduling live coding round.",
+    notes: "Take-home passed; live coding round flagged for possible undisclosed AI use. Supervised re-screen with enforced screen share and webcam required before advancing.",
     integrity: {
       identityStatus: "verified",
       workHistoryStatus: "verified",
@@ -664,6 +664,25 @@ export const demoAssessments: Assessment[] = [
     aiFluencyReview: "Assessed unaided architecture reasoning; application-layer follow-up remains the next evidence point.",
     completedAt: "2026-06-04T16:00:00Z",
     notes: "Good infra design. Weaker on application-layer patterns.",
+  },
+  {
+    id: "asmt_009",
+    candidateId: "cand_008",
+    type: "coding",
+    result: "marginal",
+    score: 64,
+    maxScore: 100,
+    grader: "Engineering Team",
+    humanReviewedAt: "2026-06-09T18:30:00Z",
+    calibrationNotes: "Senior reviewer held the round at marginal: screen-share dropouts and session telemetry need an enforced supervised re-screen before any advancement decision.",
+    aiAssistancePolicy: "not_allowed",
+    aiUsageEvidence: [
+      "No AI tools were permitted, but screen share dropped twice during the session",
+      "Solutions appeared faster than the candidate could type, with off-screen glances before each answer",
+    ],
+    aiFluencyReview: "The candidate could not explain the locking changes in the submitted code; reviewer scheduled a supervised re-screen with mandatory screen share and webcam before further evaluation.",
+    completedAt: "2026-06-09T15:00:00Z",
+    notes: "Flagged for possible undisclosed AI assistance. Result held pending an enforced supervised re-screen.",
   },
 ];
 
