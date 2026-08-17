@@ -1089,4 +1089,75 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     });
   });
 
+  // Pain point: if interviewers have not calibrated what the scores mean
+  // before scoring, the numbers are meaningless. A shared rubric keeps the
+  // same assessment type comparable across candidates and graders, so every
+  // completed result should sit inside a defensible band and explain its
+  // band placement against the shared rubric.
+  describe("Grader calibration consistency", () => {
+    const bandLimits: Record<
+      string,
+      Record<"pass" | "marginal", [number, number]>
+    > = {
+      coding: { pass: [85, 100], marginal: [60, 75] },
+      system_design: { pass: [85, 100], marginal: [60, 75] },
+      take_home: { pass: [80, 100], marginal: [60, 75] },
+      behavioral: { pass: [80, 100], marginal: [60, 75] },
+    };
+
+    it("pass and marginal scores stay inside the shared band for their assessment type", () => {
+      const completed = demoAssessments.filter(
+        (a) => a.result === "pass" || a.result === "marginal",
+      );
+      expect(completed.length).toBeGreaterThan(0);
+
+      for (const a of completed) {
+        const bands = bandLimits[a.type];
+        expect(
+          bands,
+          `Assessment ${a.id} has an unexpected type ${a.type}`,
+        ).toBeDefined();
+        if (!bands) continue;
+        const pct = (a.score / a.maxScore) * 100;
+        const [min, max] = a.result === "pass" ? bands.pass : bands.marginal;
+        expect(
+          pct,
+          `Assessment ${a.id} scored ${a.score}/${a.maxScore} (${pct.toFixed(0)}%) outside the shared ${a.result} band ${min}-${max}%`,
+        ).toBeGreaterThanOrEqual(min);
+        expect(
+          pct,
+          `Assessment ${a.id} scored ${a.score}/${a.maxScore} above the shared ${a.result} band`,
+        ).toBeLessThanOrEqual(max);
+      }
+    });
+
+    it("completed calibration notes explain score placement against the shared rubric", () => {
+      const completed = demoAssessments.filter((a) => a.result !== "pending");
+      expect(completed.length).toBeGreaterThan(0);
+
+      for (const a of completed) {
+        expect(
+          a.calibrationNotes,
+          `Assessment ${a.id} needs a rubric or band reference in its calibration notes`,
+        ).toMatch(/rubric|band|threshold|calibrat/i);
+      }
+    });
+
+    it("every assessment type in use has at least one rubric-calibrated record", () => {
+      const completed = demoAssessments.filter((a) => a.result !== "pending");
+      const rubricPattern = /rubric|band|threshold|calibrat/i;
+      const typesInUse = new Set(completed.map((a) => a.type));
+      const typesWithCalibration = new Set(
+        completed
+          .filter((a) => rubricPattern.test(a.calibrationNotes))
+          .map((a) => a.type),
+      );
+      expect(typesInUse.size).toBeGreaterThan(0);
+      expect(
+        [...typesWithCalibration].sort(),
+        `Every assessment type in use needs at least one rubric-calibrated record`,
+      ).toEqual([...typesInUse].sort());
+    });
+  });
+
 });
