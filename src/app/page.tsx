@@ -397,7 +397,7 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
         {aiPolicyLabels[assessment.aiAssistancePolicy]} · {assessment.aiFluencyReview}
       </div>
       <div className="mt-1 text-xs text-slate-400">
-        Graded by {assessment.grader} ·{" "}
+        Question set {assessment.questionSetId} · Graded by {assessment.grader} ·{" "}
         {new Date(assessment.completedAt).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",

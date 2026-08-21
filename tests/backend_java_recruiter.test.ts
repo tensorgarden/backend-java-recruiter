@@ -1160,4 +1160,43 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     });
   });
 
+  // Pain point: structured technical interviews need a stable, role-specific
+  // question set so candidates for the same requisition are comparable.
+  describe("Per-requisition question-set identity", () => {
+    it("uses one question set for each requisition and assessment type", () => {
+      const candidatesById = new Map(demoCandidates.map((candidate) => [candidate.id, candidate]));
+      const questionSetByScope = new Map<string, string>();
+      const scopedAssessments = demoAssessments.filter((assessment) => {
+        const candidate = candidatesById.get(assessment.candidateId);
+        expect(candidate, `Assessment ${assessment.id} references an unknown candidate`).toBeDefined();
+        return candidate !== undefined;
+      });
+      expect(scopedAssessments.length).toBeGreaterThan(0);
+
+      for (const assessment of scopedAssessments) {
+        const candidate = candidatesById.get(assessment.candidateId);
+        if (!candidate) continue;
+        const scope = `${candidate.jobReqId}:${assessment.type}`;
+        const questionSetId = assessment.questionSetId;
+
+        expect(
+          questionSetId,
+          `Assessment ${assessment.id} needs a stable question-set identity`,
+        ).toMatch(/^qs_[a-z0-9_]+_v\d+$/);
+
+        const firstQuestionSet = questionSetByScope.get(scope);
+        if (firstQuestionSet) {
+          expect(
+            questionSetId,
+            `Assessments for ${scope} must use the same question set`,
+          ).toBe(firstQuestionSet);
+        } else if (questionSetId) {
+          questionSetByScope.set(scope, questionSetId);
+        }
+      }
+
+      expect(questionSetByScope.size).toBeGreaterThan(1);
+    });
+  });
+
 });

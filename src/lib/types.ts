@@ -90,6 +90,7 @@ export interface JobReq {
 export interface Assessment {
   id: string;
   candidateId: string;
+  questionSetId: string;
   type: AssessmentType;
   result: AssessmentResult;
   score: number;
