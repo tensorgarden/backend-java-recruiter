@@ -1069,6 +1069,14 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
           a.result,
           `Assessment ${a.id} shows undisclosed-assistance signals but still passed`,
         ).not.toBe("pass");
+        expect(
+          a.result,
+          `Assessment ${a.id} should remain a human-review signal, not an automatic rejection`,
+        ).not.toBe("fail");
+        expect(
+          a.humanReviewedAt,
+          `Assessment ${a.id} has integrity anomalies without a human review timestamp`,
+        ).not.toBeNull();
         const reviewText = `${a.calibrationNotes} ${a.aiFluencyReview} ${a.notes}`.toLowerCase();
         expect(
           reviewText,
