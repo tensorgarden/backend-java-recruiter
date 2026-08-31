@@ -1205,6 +1205,35 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
 
       expect(questionSetByScope.size).toBeGreaterThan(1);
     });
+
+    it("keeps each assessment question set scoped to its requisition and format", () => {
+      const candidatesById = new Map(demoCandidates.map((candidate) => [candidate.id, candidate]));
+      const reqTokensById = new Map(
+        demoJobReqs.map((req) => [req.id, req.id.replace(/^req_/, "")]),
+      );
+      const scopedAssessments = demoAssessments.filter((assessment) => {
+        const candidate = candidatesById.get(assessment.candidateId);
+        expect(candidate, `Assessment ${assessment.id} references an unknown candidate`).toBeDefined();
+        return candidate !== undefined;
+      });
+      expect(scopedAssessments.length).toBeGreaterThan(0);
+
+      for (const assessment of scopedAssessments) {
+        const candidate = candidatesById.get(assessment.candidateId);
+        if (!candidate) continue;
+        const reqToken = reqTokensById.get(candidate.jobReqId);
+        expect(
+          reqToken,
+          `Candidate ${candidate.id} references an unknown requisition ${candidate.jobReqId}`,
+        ).toBeDefined();
+        if (!reqToken) continue;
+
+        expect(
+          assessment.questionSetId,
+          `Assessment ${assessment.id} should use a ${candidate.jobReqId}/${assessment.type} question set`,
+        ).toMatch(new RegExp(`^qs_${reqToken}_${assessment.type}_v\\d+$`));
+      }
+    });
   });
 
 });
