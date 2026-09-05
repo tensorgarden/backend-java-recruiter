@@ -1236,4 +1236,60 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     });
   });
 
+  // Pain point: a polished interview outline can survive a surface-level
+  // screen, while depth and candidate-specific follow-up expose generated or
+  // coached answers before they consume hiring-manager time.
+  describe("Interview-time fraud signal coverage", () => {
+    const technicalInterviewStages = new Set(["system_design", "team_interview"]);
+
+    it("requires depth-of-explanation follow-up for verified technical interviews", () => {
+      const candidates = demoCandidates.filter(
+        (candidate) =>
+          technicalInterviewStages.has(candidate.status) &&
+          candidate.integrity.liveInterviewStatus === "verified",
+      );
+      expect(candidates.length).toBeGreaterThan(0);
+
+      for (const candidate of candidates) {
+        const evidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+        expect(
+          evidence,
+          `Candidate ${candidate.id} has verified live status without depth-of-explanation evidence`,
+        ).toMatch(/follow-up|trade-off|debug|unscripted|concurrency/i);
+      }
+    });
+
+    it("ties verified technical interview evidence to the claimed backend domain", () => {
+      const candidates = demoCandidates.filter(
+        (candidate) =>
+          technicalInterviewStages.has(candidate.status) &&
+          candidate.integrity.liveInterviewStatus === "verified",
+      );
+      expect(candidates.length).toBeGreaterThan(0);
+
+      for (const candidate of candidates) {
+        const evidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+        expect(
+          evidence,
+          `Candidate ${candidate.id} has live evidence without a backend-specific signal`,
+        ).toMatch(/event|concurrency|kubernetes|kafka|payments|trade-off|debug/i);
+      }
+    });
+
+    it("keeps late-stage evidence grounded in interview-time consistency signals", () => {
+      const lateStageCandidates = demoCandidates.filter((candidate) =>
+        new Set(["system_design", "team_interview", "offer", "hired"]).has(candidate.status),
+      );
+      expect(lateStageCandidates.length).toBeGreaterThan(0);
+
+      for (const candidate of lateStageCandidates) {
+        const evidence = `${candidate.notes} ${candidate.integrity.evidence.join(" ")}`;
+        expect(
+          evidence,
+          `Candidate ${candidate.id} advanced without a captured interview-time consistency signal`,
+        ).toMatch(/matched|confirmed|validated|scheduled|follow-up|panel|interview/i);
+      }
+    });
+  });
+
 });
