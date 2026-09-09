@@ -578,6 +578,32 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     }
   });
 
+  // Recruiters need an auditable checkpoint, not a reassuring note elsewhere on the profile.
+  // Keep live-interview verification grounded in the structured integrity evidence field.
+  it("verified live-interview status is backed by structured integrity evidence", () => {
+    const verifiedLiveInterviewCandidates = demoCandidates.filter(
+      (candidate) => candidate.integrity.liveInterviewStatus === "verified",
+    );
+    expect(verifiedLiveInterviewCandidates.length).toBeGreaterThan(0);
+
+    const liveStagePattern =
+      /camera-on|\blive\b|panel|interview|screen|system-design|debug|offer-stage|onboarding/i;
+    const consistencyPattern =
+      /matched|unscripted|trade-off|debug|explain|choices|reasoning|domain-specific|concurrency|notes/i;
+
+    for (const candidate of verifiedLiveInterviewCandidates) {
+      const integrityEvidence = candidate.integrity.evidence.join(" ");
+      expect(
+        integrityEvidence,
+        `Candidate ${candidate.id} has verified live-interview status without structured live-stage evidence`,
+      ).toMatch(liveStagePattern);
+      expect(
+        integrityEvidence,
+        `Candidate ${candidate.id} has verified live-interview status without structured consistency evidence`,
+      ).toMatch(consistencyPattern);
+    }
+  });
+
   // Pain point: candidate identity fraud can slip past early screens, so
   // offer and start decisions need explicit re-verification instead of
   // relying on an application-time ID check.
