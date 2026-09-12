@@ -1262,6 +1262,40 @@ describe("Backend Java/Kotlin Recruiter — demo data integrity", () => {
     });
   });
 
+  describe("Interviewer dimension qualification", () => {
+    it("each assessment has a named qualification covering its assessment format", () => {
+      expect(demoAssessments.length).toBeGreaterThan(0);
+
+      for (const assessment of demoAssessments) {
+        const qualification = assessment.interviewerQualification;
+        expect(
+          qualification,
+          `Assessment ${assessment.id} needs an accountable interviewer qualification record`,
+        ).toBeDefined();
+        if (!qualification) continue;
+
+        expect(qualification.interviewer.trim()).toMatch(/\w+ \w+/);
+        expect(
+          qualification.qualifiedDimensions,
+          `Assessment ${assessment.id} needs qualification for ${assessment.type}`,
+        ).toContain(assessment.type);
+      }
+    });
+
+    it("qualified interviewers carry calibration or shadowing evidence", () => {
+      for (const assessment of demoAssessments) {
+        const qualification = assessment.interviewerQualification;
+        expect(qualification).toBeDefined();
+        if (!qualification) continue;
+
+        expect(
+          qualification.calibrationEvidence,
+          `Assessment ${assessment.id} qualification needs evidence beyond a title`,
+        ).toMatch(/calibrat|shadow|certif|observed|rubric/i);
+      }
+    });
+  });
+
   // Pain point: a polished interview outline can survive a surface-level
   // screen, while depth and candidate-specific follow-up expose generated or
   // coached answers before they consume hiring-manager time.

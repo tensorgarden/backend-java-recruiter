@@ -403,6 +403,12 @@ function AssessmentCard({ assessment }: { assessment: Assessment }) {
           day: "numeric",
         })}
       </div>
+      <div className="mt-2 rounded-lg bg-emerald-50/70 px-3 py-2 text-xs text-emerald-700">
+        <span className="font-semibold">Qualified interviewer:</span>{" "}
+        {assessment.interviewerQualification.interviewer} ·{" "}
+        {assessment.interviewerQualification.qualifiedDimensions.join(", ")} ·{" "}
+        {assessment.interviewerQualification.calibrationEvidence}
+      </div>
     </div>
   );
 }

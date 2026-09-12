@@ -24,6 +24,12 @@ export type AssessmentType = "coding" | "system_design" | "behavioral" | "take_h
 
 export type AssessmentResult = "pass" | "marginal" | "fail" | "pending";
 
+export interface InterviewerQualification {
+  interviewer: string;
+  qualifiedDimensions: AssessmentType[];
+  calibrationEvidence: string;
+}
+
 export type AiAssistancePolicy =
   | "not_allowed"
   | "allowed_with_disclosure"
@@ -91,6 +97,7 @@ export interface Assessment {
   id: string;
   candidateId: string;
   questionSetId: string;
+  interviewerQualification: InterviewerQualification;
   type: AssessmentType;
   result: AssessmentResult;
   score: number;
